@@ -22,10 +22,10 @@ agentic-investigate-plugin/
 ├── CONTRIBUTING.md     # Contribution guidelines
 ├── agents/             # Subagent definitions
 │   ├── agent.md        # Central subagent & architecture specification
-│   └── investigate/    # Autonomous root cause investigator (@investigate)
+│   └── coding-investigate/ # Autonomous root cause investigator (@coding-investigate)
 │       └── agent.md
 ├── skills/             # Progressive-disclosure skills
-│   └── investigate/    # Diagnostic runbooks & user grilling workflows
+│   └── coding-investigate/ # Diagnostic runbooks & user grilling workflows
 │       └── SKILL.md
 ├── rules/              # Plugin-scoped rules
 │   └── AGENTS.md

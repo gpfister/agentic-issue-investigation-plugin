@@ -6,8 +6,8 @@ Autonomous multi-repository issue investigation plugin for [Google Antigravity](
 `agentic-investigate-plugin` provides dedicated subagents and progressive-disclosure skills to diagnose root causes across repositories, interrogate users for missing context, produce structured `issue-assessment.md` artifacts, and hand off approved remediation plans to `@coding`.
 
 ## Features
-- **Declarative Subagent (`@coding-investigate`)**: Autonomous root cause investigator defined in [`agents/coding-investigate/agent.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/agents/coding-investigate/) (aliases: `@coding-investigate`, `@investigate`).
-- **Progressive Skill (`investigate`)**: Diagnostic workflow and user clarification procedures in [`skills/investigate/SKILL.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/skills/investigate/SKILL.md).
+- **Declarative Subagent (`@coding-investigate`)**: Autonomous root cause investigator defined in [`agents/coding-investigate/agent.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/agents/coding-investigate/) (alias: `@coding-investigate`).
+- **Progressive Skill (`coding-investigate`)**: Diagnostic workflow and user clarification procedures in [`skills/coding-investigate/SKILL.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/skills/coding-investigate/SKILL.md).
 - **Interactive Approval Gates**: Requires explicit user approval for `issue-assessment.md` via Antigravity's interactive modal before remediation begins.
 - **Remediation Confirmation (@coding)**: If `agentic-coding-plugin` is installed, asks user confirmation before handing off fixes to `@coding`.
 - **Vault Documentation Archival (@coding-document)**: If `agentic-document-plugin` (or `agentic-obsidian-plugin`) is installed, documents approved issues in `agentic-obsidian/investigations/`.

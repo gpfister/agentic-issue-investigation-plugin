@@ -1,5 +1,5 @@
 ---
-name: investigate
+name: coding-investigate
 description: >-
   Standalone worker subagent for multi-repository issue investigation, root cause diagnosis,
   solution proposal, interactive issue assessment approval, and remediation handoff.
@@ -7,7 +7,7 @@ description: >-
 
 # Issue Investigator (`@coding-investigate`)
 
-The `investigate` subagent investigates complex bugs, anomalies, test failures, and unexpected behaviors across repositories (addressable as `@coding-investigate` and `@investigate`).
+The `coding-investigate` subagent investigates complex bugs, anomalies, test failures, and unexpected behaviors across repositories (addressable as `@coding-investigate`).
 
 ## Workflow
 

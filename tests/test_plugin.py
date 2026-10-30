@@ -2,8 +2,20 @@
 
 import json
 from pathlib import Path
+import re
 
 PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+
+
+def extract_frontmatter_aliases(content: str) -> list[str]:
+    match = re.search(r"^---\s*\n(.*?)\n---", content, re.DOTALL)
+    if not match:
+        return []
+    fm = match.group(1)
+    alias_match = re.search(r"aliases:\s*\n((?:\s*-\s+[^\n]+\n)+)", fm)
+    if not alias_match:
+        return []
+    return [line.strip().lstrip("-").strip() for line in alias_match.group(1).strip().splitlines()]
 
 
 def test_plugin_manifest_valid():
@@ -31,27 +43,40 @@ def test_contributing_exists():
 
 def test_investigate_agent_exists():
     agent_file = PLUGIN_ROOT / "agents" / "coding-investigate" / "agent.md"
-    if not agent_file.exists():
-        agent_file = PLUGIN_ROOT / "agents" / "investigate" / "agent.md"
-    assert agent_file.exists(), "agent.md must exist in coding-investigate or investigate"
+    assert agent_file.exists(), "agents/coding-investigate/agent.md must exist"
+
+    legacy_agent_dir = PLUGIN_ROOT / "agents" / "investigate"
+    assert not legacy_agent_dir.exists(), "agents/investigate must NOT exist"
+
     content = agent_file.read_text(encoding="utf-8")
-    assert "name: coding-investigate" in content or "coding-investigate" in content
+    assert "name: coding-investigate" in content
     assert "Issue Investigator" in content
+
+    aliases = extract_frontmatter_aliases(content)
+    assert aliases, "aliases must be defined in frontmatter"
+    assert "investigate" not in aliases, "'investigate' alias must be excluded"
+    alias_pattern = re.compile(r"^coding(-.*)?$")
+    for alias in aliases:
+        assert alias_pattern.match(alias), f"Alias '{alias}' does not match pattern '^coding(-.*)?$'"
 
 
 def test_central_agent_guide_exists():
     central_file = PLUGIN_ROOT / "agents" / "agent.md"
     assert central_file.exists(), "agents/agent.md must exist"
     content = central_file.read_text(encoding="utf-8")
-    assert "name: agent" in content or "name: investigate-catalog" in content or "name: coding-investigate-catalog" in content
+    assert "name: coding-investigate-catalog" in content or "Issue Investigation" in content
     assert "Issue Investigation" in content
 
 
 def test_investigate_skill_exists():
-    skill_file = PLUGIN_ROOT / "skills" / "investigate" / "SKILL.md"
-    assert skill_file.exists(), "skills/investigate/SKILL.md must exist"
+    skill_file = PLUGIN_ROOT / "skills" / "coding-investigate" / "SKILL.md"
+    assert skill_file.exists(), "skills/coding-investigate/SKILL.md must exist"
+
+    legacy_skill_dir = PLUGIN_ROOT / "skills" / "investigate"
+    assert not legacy_skill_dir.exists(), "skills/investigate must NOT exist"
+
     content = skill_file.read_text(encoding="utf-8")
-    assert "name: investigate" in content
+    assert "name: coding-investigate" in content
     assert "Multi-Repo Root Cause Search" in content
 
 
