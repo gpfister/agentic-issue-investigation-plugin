@@ -9,7 +9,7 @@ tools:
   - list_dir
 ---
 
-# Issue Investigation Subagents & Architecture (`agents/agent.md`)
+# Coding - Issue Investigation Subagents & Architecture (agents/agent.md)
 
 This document defines the subagent architecture and catalog for the **`agentic-investigate-plugin`**.
 

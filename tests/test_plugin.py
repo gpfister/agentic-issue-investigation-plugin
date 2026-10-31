@@ -50,7 +50,7 @@ def test_investigate_agent_exists():
 
     content = agent_file.read_text(encoding="utf-8")
     assert "name: coding-investigate" in content
-    assert "Issue Investigator" in content
+    assert "# Coding - Issue Investigator (@coding-investigate)" in content
 
     aliases = extract_frontmatter_aliases(content)
     assert aliases, "aliases must be defined in frontmatter"
@@ -64,8 +64,8 @@ def test_central_agent_guide_exists():
     central_file = PLUGIN_ROOT / "agents" / "agent.md"
     assert central_file.exists(), "agents/agent.md must exist"
     content = central_file.read_text(encoding="utf-8")
-    assert "name: coding-investigate-catalog" in content or "Issue Investigation" in content
-    assert "Issue Investigation" in content
+    assert "name: coding-investigate-catalog" in content
+    assert "# Coding - Issue Investigation Subagents & Architecture (agents/agent.md)" in content
 
 
 def test_investigate_skill_exists():
@@ -85,3 +85,5 @@ def test_rules_exist():
     assert rules_file.exists(), "rules/AGENTS.md must exist"
     content = rules_file.read_text(encoding="utf-8")
     assert "Issue Investigation Standards" in content
+    assert "agentic-document-plugin" in content
+    assert "agentic-obsidian-plugin" not in content

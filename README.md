@@ -10,7 +10,7 @@ Autonomous multi-repository issue investigation plugin for [Google Antigravity](
 - **Progressive Skill (`coding-investigate`)**: Diagnostic workflow and user clarification procedures in [`skills/coding-investigate/SKILL.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/skills/coding-investigate/SKILL.md).
 - **Interactive Approval Gates**: Requires explicit user approval for `issue-assessment.md` via Antigravity's interactive modal before remediation begins.
 - **Remediation Confirmation (@coding)**: If `agentic-coding-plugin` is installed, asks user confirmation before handing off fixes to `@coding`.
-- **Vault Documentation Archival (@coding-document)**: If `agentic-document-plugin` (or `agentic-obsidian-plugin`) is installed, documents approved issues in `agentic-obsidian/investigations/`.
+- **Vault Documentation Archival (@coding-document)**: If `agentic-document-plugin` is installed, documents approved issues in `agentic-obsidian/investigations/`.
 
 ## Installation & Activation
 
