@@ -1,6 +1,6 @@
-# Issue Investigation Standards — agentic-investigate-plugin
+# Issue Investigation Standards — agentic-issue-investigation-plugin
 
-This rule set applies whenever the `agentic-investigate-plugin` is active in an Antigravity session.
+This rule set applies whenever the `agentic-issue-investigation-plugin` is active in an Antigravity session.
 
 ---
 

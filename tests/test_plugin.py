@@ -1,4 +1,4 @@
-"""Tests for agentic-investigate-plugin structure and specifications."""
+"""Tests for agentic-issue-investigation-plugin structure and specifications."""
 
 import json
 from pathlib import Path
@@ -22,7 +22,7 @@ def test_plugin_manifest_valid():
     manifest_file = PLUGIN_ROOT / "plugin.json"
     assert manifest_file.exists(), "plugin.json must exist"
     data = json.loads(manifest_file.read_text(encoding="utf-8"))
-    assert data.get("name") == "agentic-investigate-plugin"
+    assert data.get("name") == "agentic-issue-investigation-plugin"
     assert data.get("license") == "MIT"
 
 
@@ -38,7 +38,7 @@ def test_contributing_exists():
     contrib_file = PLUGIN_ROOT / "CONTRIBUTING.md"
     assert contrib_file.exists(), "CONTRIBUTING.md must exist"
     content = contrib_file.read_text(encoding="utf-8")
-    assert "agentic-investigate-plugin" in content
+    assert "agentic-issue-investigation-plugin" in content
 
 
 def test_investigate_agent_exists():

@@ -1,11 +1,11 @@
-# Contributing to agentic-investigate-plugin
+# Contributing to agentic-issue-investigation-plugin
 
-Thank you for contributing to **`agentic-investigate-plugin`**! This plugin provides multi-repository root cause investigation capabilities for Google Antigravity.
+Thank you for contributing to **`agentic-issue-investigation-plugin`**! This plugin provides multi-repository root cause investigation capabilities for Google Antigravity.
 
 ---
 
 ## 1. Core Guidelines
-- Adhere to the standards defined in [`rules/AGENTS.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/rules/AGENTS.md).
+- Adhere to the standards defined in [`rules/AGENTS.md`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-issue-investigation-plugin/rules/AGENTS.md).
 - Keep subagent definitions modular, declarative, and isolated in `agents/<agent>/agent.md`.
 - Skills must include valid YAML frontmatter (`name`, `description`) matching the skill directory name.
 
@@ -14,7 +14,7 @@ Thank you for contributing to **`agentic-investigate-plugin`**! This plugin prov
 ## 2. Directory Structure
 
 ```text
-agentic-investigate-plugin/
+agentic-issue-investigation-plugin/
 ├── plugin.json         # Plugin manifest
 ├── pyproject.toml      # Project metadata & test dependencies
 ├── README.md           # Documentation

@@ -1,6 +1,6 @@
 ---
 name: coding-investigate-catalog
-description: Architecture overview and catalog for the agentic-investigate-plugin subagents.
+description: Architecture overview and catalog for the agentic-issue-investigation-plugin subagents.
 enable_write_tools: false
 enable_subagent_tools: false
 enable_mcp_tools: false
@@ -11,13 +11,13 @@ tools:
 
 # Coding - Issue Investigation Subagents & Architecture (agents/agent.md)
 
-This document defines the subagent architecture and catalog for the **`agentic-investigate-plugin`**.
+This document defines the subagent architecture and catalog for the **`agentic-issue-investigation-plugin`**.
 
 ---
 
 ## 1. Architectural Overview
 
-The `agentic-investigate-plugin` provides autonomous root cause analysis, user interrogation, solution formulation, and remediation handoffs across multi-repository workspaces. It isolates bug hunting and defect diagnostics into a specialized subagent (`@coding-investigate`), ensuring code is never modified without evidence-backed root cause analysis and explicit human approval.
+The `agentic-issue-investigation-plugin` provides autonomous root cause analysis, user interrogation, solution formulation, and remediation handoffs across multi-repository workspaces. It isolates bug hunting and defect diagnostics into a specialized subagent (`@coding-investigate`), ensuring code is never modified without evidence-backed root cause analysis and explicit human approval.
 
 ### Directory Structure
 ```text
@@ -33,7 +33,7 @@ agents/
 
 | Agent Handle | Directory | `enable_write_tools` | `enable_subagent_tools` | `enable_mcp_tools` | Allowed Tools | Description |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| **`@coding-investigate`** | [`agents/coding-investigate/`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-investigate-plugin/agents/coding-investigate/) | `True` | `True` | `True` | `read_file`, `list_dir`, `run_command`, `search_web`, `ask_question`, `write_file`, `invoke_subagent`, `send_message`, `manage_subagents` | Standalone multi-repository root cause investigator producing `issue-assessment.md` artifacts, grilling users when needed, handing off approved fixes to `@coding` (if installed), and archiving to `@coding-document` (if installed). |
+| **`@coding-investigate`** | [`agents/coding-investigate/`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-issue-investigation-plugin/agents/coding-investigate/) | `True` | `True` | `True` | `read_file`, `list_dir`, `run_command`, `search_web`, `ask_question`, `write_file`, `invoke_subagent`, `send_message`, `manage_subagents` | Standalone multi-repository root cause investigator producing `issue-assessment.md` artifacts, grilling users when needed, handing off approved fixes to `@coding` (if installed), and archiving to `@coding-document` (if installed). |
 
 ---
 

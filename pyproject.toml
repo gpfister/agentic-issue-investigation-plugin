@@ -1,5 +1,5 @@
 [project]
-name = "agentic-investigate-plugin"
+name = "agentic-issue-investigation-plugin"
 version = "0.1.0"
 description = "Autonomous multi-repository issue investigation plugin diagnosing root causes, grilling users, and formulating solutions."
 readme = "README.md"
