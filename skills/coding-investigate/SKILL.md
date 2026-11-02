@@ -26,7 +26,7 @@ The `coding-investigate` subagent investigates complex bugs, anomalies, test fai
      - If NOT installed: presents manual resolution guidance and notes that `agentic-coding-plugin` is not installed.
 6. **Obsidian Vault Archival (@coding-document)**:
    - Once the issue investigation is done:
-     - If `agentic-document-plugin` is installed, invokes `@coding-document` to store and index the investigation and assessment in `agentic-obsidian/investigations/`.
+     - If `agentic-project-documenting-plugin` is installed, invokes `@coding-document` to store and index the investigation and assessment in `agentic-obsidian/investigations/`.
      - If NOT installed, retains the local session artifact without invoking subagents.
 
 ## Triggering the Subagent

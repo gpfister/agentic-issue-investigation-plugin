@@ -29,5 +29,5 @@ This rule set applies whenever the `agentic-issue-investigation-plugin` is activ
 ---
 
 ## 4. Documentation Archival with @coding-document
-- When `agentic-document-plugin` is installed, once the issue investigation is done, invoke `@coding-document` to store and archive the root-cause diagnosis, evidence, and remediation assessment in `agentic-obsidian/investigations/`.
-- If `agentic-document-plugin` is not installed, preserve the local `issue-assessment.md` artifact without invoking subagents.
+- When `agentic-project-documenting-plugin` is installed, once the issue investigation is done, invoke `@coding-document` to store and archive the root-cause diagnosis, evidence, and remediation assessment in `agentic-obsidian/investigations/`.
+- If `agentic-project-documenting-plugin` is not installed, preserve the local `issue-assessment.md` artifact without invoking subagents.

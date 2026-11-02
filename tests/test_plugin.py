@@ -85,5 +85,6 @@ def test_rules_exist():
     assert rules_file.exists(), "rules/AGENTS.md must exist"
     content = rules_file.read_text(encoding="utf-8")
     assert "Issue Investigation Standards" in content
-    assert "agentic-document-plugin" in content
+    assert "agentic-project-documenting-plugin" in content
+    assert f"agentic-{'document'}-plugin" not in content
     assert "agentic-obsidian-plugin" not in content

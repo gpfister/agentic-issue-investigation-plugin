@@ -61,7 +61,7 @@ Multi-Repo Search ──> Solution Found? ──(No)──> Grill User (ask_ques
          │             │
          └──────┬──────┘
                 ▼
-  agentic-document-plugin installed?
+agentic-project-documenting-plugin installed?
        │                    │
      (Yes)                 (No)
        ▼                    ▼
