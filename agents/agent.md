@@ -33,16 +33,16 @@ agents/
 
 | Agent Handle | Directory | `enable_write_tools` | `enable_subagent_tools` | `enable_mcp_tools` | Allowed Tools | Description |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| **`@coding-investigate`** | [`agents/coding-investigate/`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-issue-investigation-plugin/agents/coding-investigate/) | `True` | `True` | `True` | `read_file`, `list_dir`, `run_command`, `search_web`, `ask_question`, `write_file`, `invoke_subagent`, `send_message`, `manage_subagents` | Standalone multi-repository root cause investigator producing `issue-assessment.md` artifacts, grilling users when needed, handing off approved fixes to `@coding` (if installed), and archiving to `@coding-document` (if installed). |
+| **`@coding-investigate`** | [`agents/coding-investigate/`](file:///Users/gpfister/Development/Projects/gpfister/agentic/agentic-issue-investigation-plugin/agents/coding-investigate/) | `True` | `True` | `True` | `read_file`, `list_dir`, `run_command`, `search_web`, `ask_question`, `write_file`, `invoke_subagent`, `send_message`, `manage_subagents` | Dual-mode multi-repository root cause investigator producing `issue-assessment.md` artifacts, grilling users when needed (via Question Relay Protocol when invoked as a subagent, or `ask_question` directly when standalone), handing off approved fixes to `@coding` (if installed), and archiving to `@coding-document` (if installed). |
 
 ---
 
 ## 3. Investigation & Remediation Protocol
 
 ```text
-Multi-Repo Search ──> Solution Found? ──(No)──> Grill User (ask_question) ──┐
-                            │                                                │
-                          (Yes) <────────────────────────────────────────────┘
+Multi-Repo Search ──> Solution Found? ──(No)──> Grill User (Dual-Mode) ──────┐
+                            │                    * Subagent: [QUESTION_RELAY] │
+                          (Yes) <──────────────── * Standalone: ask_question ─┘
                             ▼
                 Write issue-assessment.md (RequestFeedback=True)
                             │
@@ -53,7 +53,7 @@ Multi-Repo Search ──> Solution Found? ──(No)──> Grill User (ask_ques
                  (Yes)                 (No)
                    ▼                    ▼
         Ask Resolution Confirmation   Provide manual
-        via ask_question (Yes/No)     resolution steps
+        (Dual-Mode Relay / Question)  resolution steps
          │             │
        (Yes)          (No)
          ▼             ▼
@@ -68,6 +68,20 @@ agentic-project-documenting-plugin installed?
 Invoke @coding-document    Retain local
 to document issue          artifact
 ```
+
+### Dual-Mode Question Handling & Question Relay Protocol
+`@coding-investigate` supports dual-mode user interrogation and confirmation:
+1. **Subagent Mode (Question Relay Protocol)**:
+   - When invoked by a parent orchestrator (`@coding-deploy`, `@coding-monitor`, or main session orchestrator with caller context), it relays user questions via `send_message` with:
+     ```text
+     [QUESTION_RELAY_REQUEST]
+     Question: ...
+     Options: ...
+     Context: ...
+     ```
+   - Awaits `[QUESTION_RELAY_RESPONSE]\nAnswer: ...` to receive the human decision before continuing.
+2. **Standalone Mode**:
+   - When running directly at the top level without parent caller context, it invokes `ask_question` directly.
 
 ### Mandatory Artifact Approval Gate
 - **Location**: `<appDataDir>/brain/<conversation-id>/issue-assessment.md`

@@ -39,7 +39,29 @@ Your mission is to thoroughly investigate software issues, defects, test failure
 ### 3. User Interrogation & Clarification (when no solution found)
 - If no solution can be found after initial investigation:
   - Interrogate the user to obtain more context, reproduction steps, logs, environment details, or recent changes.
-  - Ask questions **one at a time** using the `ask_question` tool.
+  - Ask questions **one at a time**.
+  - **Question Relay Protocol (Dual-Mode)**:
+    * **Subagent Mode**: If running as a subagent (invoked by `@coding-deploy`, `@coding-monitor`, or main session orchestrator with caller context), do NOT call `ask_question` directly. Relay user questions to the parent caller via `send_message`:
+      ```python
+      send_message(
+          Recipient="<caller_id>",
+          Message="[QUESTION_RELAY_REQUEST]\nQuestion: <Question text>\nOptions:\n- (Recommended) <Option 1>\n- <Option 2>\nContext: <Why this clarification is required and technical context>"
+      )
+      ```
+      Await `[QUESTION_RELAY_RESPONSE]\nAnswer: <selected_option_or_text>` to receive the human decision.
+    * **Standalone Mode**: If running top-level (direct user interaction without parent subagent context), invoke `ask_question` directly:
+      ```python
+      ask_question(
+          questions=[{
+              "question": "<Question text>",
+              "options": [
+                  "(Recommended) <Option 1>",
+                  "<Option 2>"
+              ],
+              "is_multi_select": False
+          }]
+      )
+      ```
   - You may ask multiple-choice questions with recommendations or open-ended questions when appropriate.
   - Continue investigating and grilling until at least one viable solution is found, OR until you identify and confirm that there is no possible solution at the moment.
   - If no solution is currently possible, clearly report your findings, constraints, and why remediation cannot proceed.
@@ -65,19 +87,28 @@ Your mission is to thoroughly investigate software issues, defects, test failure
 - Once the Issue Assessment is approved:
   - **If `agentic-coding-plugin` is installed**:
     Ask the user if they want to invoke `@coding` to work on the resolution:
-    - Use the `ask_question` tool with a binary Yes/No question:
-      ```python
-      ask_question(
-          questions=[{
-              "question": "Do you want to invoke the @coding agent to start working on the resolution for this issue?",
-              "options": [
-                  "(Recommended) Yes, invoke @coding to implement the correction",
-                  "No, do not start working on the correction now"
-              ],
-              "is_multi_select": False
-          }]
-      )
-      ```
+    - **Question Relay Protocol (Dual-Mode)**:
+      * **Subagent Mode**: If running as a subagent (invoked by `@coding-deploy`, `@coding-monitor`, or main session orchestrator with caller context), do NOT call `ask_question` directly. Relay the question to the parent caller via `send_message`:
+        ```python
+        send_message(
+            Recipient="<caller_id>",
+            Message="[QUESTION_RELAY_REQUEST]\nQuestion: Do you want to invoke the @coding agent to start working on the resolution for this issue?\nOptions:\n- (Recommended) Yes, invoke @coding to implement the correction\n- No, do not start working on the correction now\nContext: Issue assessment has been approved and remediation can proceed."
+        )
+        ```
+        Await `[QUESTION_RELAY_RESPONSE]\nAnswer: ...` to receive the human decision.
+      * **Standalone Mode**: If running top-level (direct user interaction without parent subagent context), invoke `ask_question` directly with a binary Yes/No question:
+        ```python
+        ask_question(
+            questions=[{
+                "question": "Do you want to invoke the @coding agent to start working on the resolution for this issue?",
+                "options": [
+                    "(Recommended) Yes, invoke @coding to implement the correction",
+                    "No, do not start working on the correction now"
+                ],
+                "is_multi_select": False
+            }]
+        )
+        ```
     - **If the user answers Yes**:
       - Invoke the `@coding` agent using `invoke_subagent` with a request to implement the correction and a reference to the approved Issue Assessment:
         ```python
