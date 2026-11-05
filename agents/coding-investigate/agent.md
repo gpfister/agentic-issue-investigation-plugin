@@ -76,12 +76,45 @@ Your mission is to thoroughly investigate software issues, defects, test failure
   - `## 2. Root Cause Analysis`: Detailed findings, evidence, affected files and repositories (with clickable links).
   - `## 3. Proposed Solutions`: Detailed solution options, trade-offs, and recommended approach.
   - `## 4. Verification & Validation Plan`: How the correction will be verified and tested.
-- **Antigravity Interactive Artifact Approval Protocol**:
-  - You MUST write the artifact using `write_file` with `ArtifactMetadata={"RequestFeedback": True, "UserFacing": True}`.
-  - **Turn Termination & Sole Tool Call Rule**: `write_file(..., RequestFeedback=True)` MUST be the **sole and final tool call of that turn**. Do not invoke any other tools after it. End the turn immediately so the Antigravity interactive Approve / Reject buttons appear for the user.
-  - Await user approval:
-    - If `[Approved] issue-assessment.md`: Proceed to Step 5 (Correction Confirmation).
-    - If `[Rejected] issue-assessment.md`: Review user feedback, revise the investigation or solutions, update `issue-assessment.md`, and re-request feedback.
+- **Artifact Approval Protocol (Dual-Mode)**:
+  - **Subagent Mode (Artifact Approval Relay Protocol)**:
+    * When running as a subagent (invoked by `@coding-deploy`, `@coding-monitor`, or main session orchestrator with caller context):
+      1. Write the artifact to disk using `write_file(Path="<appDataDir>/brain/<conversation-id>/issue-assessment.md", Content=..., Overwrite=True)` without setting `RequestFeedback=True` in ArtifactMetadata (or omit ArtifactMetadata) to prevent the 60-second runtime execution timeout.
+      2. Relay the approval request to the caller orchestrator via `send_message`:
+         ```python
+         send_message(
+             Recipient="<caller_id>",
+             Message="""[ARTIFACT_APPROVAL_REQUEST]
+         {
+           "type": "ARTIFACT_APPROVAL_REQUEST",
+           "artifact_name": "issue-assessment.md",
+           "artifact_path": "<appDataDir>/brain/<conversation-id>/issue-assessment.md",
+           "stage": "INVESTIGATION",
+           "summary": "Detailed root-cause analysis and proposed solutions for <issue>",
+           "user_facing": true
+         }"""
+         )
+         ```
+      3. Enter IDLE state (do not execute further tools). The runtime will reactively wake up the subagent upon receiving `[ARTIFACT_APPROVAL_RESPONSE]`.
+      4. Handle the response envelope:
+         ```text
+         [ARTIFACT_APPROVAL_RESPONSE]
+         {
+           "type": "ARTIFACT_APPROVAL_RESPONSE",
+           "artifact_name": "issue-assessment.md",
+           "status": "APPROVED",
+           "feedback": ""
+         }
+         ```
+         - If `status == "APPROVED"`: Proceed to Step 5 (Correction Confirmation Gate).
+         - If `status == "REJECTED"`: Inspect the user feedback in `feedback`, revise the investigation findings or proposed solutions, update `issue-assessment.md` on disk, and re-dispatch `[ARTIFACT_APPROVAL_REQUEST]`.
+  - **Standalone Mode**:
+    * When running top-level (direct user interaction without parent subagent context):
+      1. You MUST write the artifact using `write_file` with `ArtifactMetadata={"RequestFeedback": True, "UserFacing": True}`.
+      2. **Turn Termination & Sole Tool Call Rule**: `write_file(..., RequestFeedback=True)` MUST be the **sole and final tool call of that turn**. Do not invoke any other tools after it. End the turn immediately so the Antigravity interactive Approve / Reject buttons appear for the user.
+      3. Await user approval:
+         - If `[Approved] issue-assessment.md`: Proceed to Step 5 (Correction Confirmation).
+         - If `[Rejected] issue-assessment.md`: Review user feedback, revise the investigation or solutions, update `issue-assessment.md`, and re-request feedback.
 
 ### 5. Correction Confirmation Gate (@coding)
 - Once the Issue Assessment is approved:

@@ -20,9 +20,39 @@ The `coding-investigate` subagent investigates complex bugs, anomalies, test fai
    - **Dual-Mode Handling**:
      - **Subagent Mode**: When invoked as a subagent (by `@coding-deploy`, `@coding-monitor`, or main orchestrator with caller context), relay questions to the caller via `send_message` with `[QUESTION_RELAY_REQUEST]\nQuestion: ...\nOptions: ...\nContext: ...` and await `[QUESTION_RELAY_RESPONSE]\nAnswer: ...`. Do NOT invoke `ask_question` directly.
      - **Standalone Mode**: When running directly at the top level without caller context, invoke `ask_question` directly.
-4. **Issue Assessment Artifact Gate**:
-   - Writes `issue-assessment.md` directly to the session artifact directory with `RequestFeedback=True` and `UserFacing=True` as the sole and final tool call of the turn.
-   - Waits for user approval (`[Approved]` or `[Rejected]`).
+4. **Issue Assessment Artifact Gate (Dual-Mode)**:
+   - **Subagent Mode (Artifact Approval Relay Protocol)**:
+     - When invoked as a subagent (caller context present), write `issue-assessment.md` to the session artifact directory without `RequestFeedback=True` to avoid the 60-second runtime execution timeout.
+     - Relay the approval request to the parent caller via `send_message` with:
+       ```text
+       [ARTIFACT_APPROVAL_REQUEST]
+       ```
+       ```json
+       {
+         "type": "ARTIFACT_APPROVAL_REQUEST",
+         "artifact_name": "issue-assessment.md",
+         "artifact_path": "<session-artifact-directory>/issue-assessment.md",
+         "stage": "INVESTIGATION",
+         "summary": "Detailed root-cause analysis and proposed solutions...",
+         "user_facing": true
+       }
+       ```
+     - Enters IDLE state awaiting reactive wakeup upon receiving:
+       ```text
+       [ARTIFACT_APPROVAL_RESPONSE]
+       ```
+       ```json
+       {
+         "type": "ARTIFACT_APPROVAL_RESPONSE",
+         "artifact_name": "issue-assessment.md",
+         "status": "APPROVED",
+         "feedback": ""
+       }
+       ```
+     - If `status` is `"APPROVED"`, advances to Step 5 (Correction Confirmation). If `"REJECTED"`, incorporates feedback, updates `issue-assessment.md` on disk, and re-dispatches `[ARTIFACT_APPROVAL_REQUEST]`.
+   - **Standalone Mode**:
+     - When running directly at the top level without caller context, writes `issue-assessment.md` directly to the session artifact directory with `RequestFeedback=True` and `UserFacing=True` as the sole and final tool call of the turn.
+     - Waits for user approval (`[Approved]` or `[Rejected]`).
 5. **Correction Confirmation & Handoff (@coding)**:
    - Once approved, checks if `agentic-coding-plugin` is installed:
      - If installed: confirms with user whether to invoke `@coding` to implement the resolution (Yes/No) via Question Relay Protocol (relaying `[QUESTION_RELAY_REQUEST]` via `send_message` in subagent mode, or `ask_question` in standalone mode). If Yes, invokes `@coding` (`invoke_subagent(TypeName="coding", Role="Coding Workflow Orchestrator", Prompt=...)`). If No, halts without modifying code.

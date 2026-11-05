@@ -143,3 +143,60 @@ def test_question_relay_protocol_in_central_guide():
     assert "[QUESTION_RELAY_REQUEST]" in content
     assert "[QUESTION_RELAY_RESPONSE]" in content
 
+
+def test_artifact_approval_relay_in_agent():
+    agent_file = PLUGIN_ROOT / "agents" / "coding-investigate" / "agent.md"
+    assert agent_file.exists(), "agents/coding-investigate/agent.md must exist"
+    content = agent_file.read_text(encoding="utf-8")
+
+    # Verify Artifact Approval Relay Protocol envelopes and fields
+    assert "[ARTIFACT_APPROVAL_REQUEST]" in content
+    assert "[ARTIFACT_APPROVAL_RESPONSE]" in content
+    assert "Artifact Approval Protocol (Dual-Mode)" in content
+    assert "artifact_name" in content
+    assert "artifact_path" in content
+    assert "APPROVED" in content
+    assert "REJECTED" in content
+    assert "feedback" in content
+
+    # Verify Dual-mode behavior
+    assert "Subagent Mode (Artifact Approval Relay Protocol)" in content
+    assert "Standalone Mode" in content
+    assert "Recipient=\"<caller_id>\"" in content
+
+
+def test_artifact_approval_relay_in_rules_and_skill():
+    rules_file = PLUGIN_ROOT / "rules" / "AGENTS.md"
+    assert rules_file.exists(), "rules/AGENTS.md must exist"
+    rules_content = rules_file.read_text(encoding="utf-8")
+    assert "Artifact Approval Relay Protocol (Dual-Mode)" in rules_content
+    assert "[ARTIFACT_APPROVAL_REQUEST]" in rules_content
+    assert "[ARTIFACT_APPROVAL_RESPONSE]" in rules_content
+    assert "Subagent Mode" in rules_content
+    assert "Standalone Mode" in rules_content
+
+    skill_file = PLUGIN_ROOT / "skills" / "coding-investigate" / "SKILL.md"
+    assert skill_file.exists(), "skills/coding-investigate/SKILL.md must exist"
+    skill_content = skill_file.read_text(encoding="utf-8")
+    assert "Artifact Approval Relay Protocol" in skill_content
+    assert "[ARTIFACT_APPROVAL_REQUEST]" in skill_content
+    assert "[ARTIFACT_APPROVAL_RESPONSE]" in skill_content
+    assert "Subagent Mode" in skill_content
+    assert "Standalone Mode" in skill_content
+    assert "APPROVED" in skill_content
+    assert "REJECTED" in skill_content
+
+
+def test_artifact_approval_relay_in_central_guide():
+    central_file = PLUGIN_ROOT / "agents" / "agent.md"
+    assert central_file.exists(), "agents/agent.md must exist"
+    content = central_file.read_text(encoding="utf-8")
+    assert "Dual-Mode Artifact Approval Handling & Relay Protocol" in content
+    assert "[ARTIFACT_APPROVAL_REQUEST]" in content
+    assert "[ARTIFACT_APPROVAL_RESPONSE]" in content
+    assert "Subagent Mode" in content
+    assert "Standalone Mode" in content
+    assert "APPROVED" in content
+    assert "REJECTED" in content
+
+
