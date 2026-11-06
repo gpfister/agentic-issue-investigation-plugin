@@ -200,3 +200,24 @@ def test_artifact_approval_relay_in_central_guide():
     assert "REJECTED" in content
 
 
+def test_standardized_coding_orchestrator_invocation_prompt():
+    rules_file = PLUGIN_ROOT / "rules" / "AGENTS.md"
+    assert rules_file.exists(), "rules/AGENTS.md must exist"
+    rules_content = rules_file.read_text(encoding="utf-8")
+    expected_prompt_snippet = (
+        "Orchestrate the 7-stage software development lifecycle to implement the following feature / correction "
+        "based on the approved assessment: <details/path>. Do not implement directly; delegate all phases through worker subagents."
+    )
+    assert expected_prompt_snippet in rules_content, "Standardized prompt template missing from rules/AGENTS.md"
+
+    agent_file = PLUGIN_ROOT / "agents" / "coding-investigate" / "agent.md"
+    agent_content = agent_file.read_text(encoding="utf-8")
+    assert "Orchestrate the 7-stage software development lifecycle" in agent_content
+    assert "Do not implement directly; delegate all phases through worker subagents." in agent_content
+
+    skill_file = PLUGIN_ROOT / "skills" / "coding-investigate" / "SKILL.md"
+    skill_content = skill_file.read_text(encoding="utf-8")
+    assert "Orchestrate the 7-stage software development lifecycle" in skill_content
+
+
+

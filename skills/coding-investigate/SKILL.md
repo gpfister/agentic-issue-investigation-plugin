@@ -55,7 +55,7 @@ The `coding-investigate` subagent investigates complex bugs, anomalies, test fai
      - Waits for user approval (`[Approved]` or `[Rejected]`).
 5. **Correction Confirmation & Handoff (@coding)**:
    - Once approved, checks if `agentic-coding-plugin` is installed:
-     - If installed: confirms with user whether to invoke `@coding` to implement the resolution (Yes/No) via Question Relay Protocol (relaying `[QUESTION_RELAY_REQUEST]` via `send_message` in subagent mode, or `ask_question` in standalone mode). If Yes, invokes `@coding` (`invoke_subagent(TypeName="coding", Role="Coding Workflow Orchestrator", Prompt=...)`). If No, halts without modifying code.
+     - If installed: confirms with user whether to invoke `@coding` to implement the resolution (Yes/No) via Question Relay Protocol (relaying `[QUESTION_RELAY_REQUEST]` via `send_message` in subagent mode, or `ask_question` in standalone mode). If Yes, invokes `@coding` with the standardized orchestration prompt (`invoke_subagent(TypeName="coding", Role="Coding Workflow Orchestrator", Prompt="Orchestrate the 7-stage software development lifecycle to implement the following feature / correction based on the approved assessment: <details/path>. Do not implement directly; delegate all phases through worker subagents.")`). If No, halts without modifying code.
      - If NOT installed: presents manual resolution guidance and notes that `agentic-coding-plugin` is not installed.
 6. **Obsidian Vault Archival (@coding-document)**:
    - Once the issue investigation is done:
