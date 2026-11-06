@@ -143,12 +143,12 @@ Your mission is to thoroughly investigate software issues, defects, test failure
         )
         ```
     - **If the user answers Yes**:
-      - Invoke the `@coding` agent using `invoke_subagent` with a request to implement the correction and a reference to the approved Issue Assessment:
+      - Invoke the `@coding` agent using `invoke_subagent` with the standardized orchestration prompt referencing the approved Issue Assessment:
         ```python
         invoke_subagent(
             TypeName="coding",
             Role="Coding Workflow Orchestrator",
-            Prompt="Implement the correction for the issue based on the approved Issue Assessment artifact at <appDataDir>/brain/<conversation-id>/issue-assessment.md.",
+            Prompt="Orchestrate the 7-stage software development lifecycle to implement the following feature / correction based on the approved assessment: <appDataDir>/brain/<conversation-id>/issue-assessment.md. Do not implement directly; delegate all phases through worker subagents.",
             Model="inherit"
         )
         ```

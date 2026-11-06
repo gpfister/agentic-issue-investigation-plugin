@@ -20,7 +20,10 @@ This rule set applies whenever the `agentic-issue-investigation-plugin` is activ
   - **Subagent Mode**: When running as a subagent under a caller orchestrator, do NOT call `write_file` with `RequestFeedback=True` to avoid the 60-second runtime execution timeout. Write `issue-assessment.md` to disk directly and dispatch `[ARTIFACT_APPROVAL_REQUEST]` via `send_message` to the parent caller. Await `[ARTIFACT_APPROVAL_RESPONSE]` to advance upon approval or revise upon rejection.
   - **Standalone Mode**: When running top-level (direct user interaction without parent subagent context), writing `issue-assessment.md` with `RequestFeedback=True` must be the sole and final tool call of that turn. Never batch secondary tool calls after authoring the artifact so Antigravity renders the interactive Approve / Reject buttons.
 - **Remediation Confirmation Gate**:
-  - If `agentic-coding-plugin` is installed: ask the user whether they want to invoke `@coding` to work on the resolution (using Question Relay Protocol via `send_message` in subagent mode, or `ask_question` in standalone mode). If Yes, invoke `@coding`.
+  - If `agentic-coding-plugin` is installed: ask the user whether they want to invoke `@coding` to work on the resolution (using Question Relay Protocol via `send_message` in subagent mode, or `ask_question` in standalone mode). If Yes, invoke `@coding` using the standardized orchestration prompt:
+    ```text
+    Orchestrate the 7-stage software development lifecycle to implement the following feature / correction based on the approved assessment: <details/path>. Do not implement directly; delegate all phases through worker subagents.
+    ```
   - If `agentic-coding-plugin` is NOT installed: provide manual remediation steps without invoking `@coding`.
 
 ---
