@@ -7,7 +7,7 @@ This rule set applies whenever the `agentic-issue-investigation-plugin` is activ
 ## 1. Investigation Principles
 - **Evidence-Based Diagnosis**: Never speculate or propose code modifications without tangible evidence (stack traces, logs, git commits, reproducible steps).
 - **Multi-Repository Discipline**: Trace cross-service RPCs, REST calls, shared libraries, and schema contracts across all repositories before concluding root causes.
-- **Read-Only Investigation**: During the diagnostic phase, do not alter application source code or tests. If `agentic-coding-plugin` is installed, modifying code occurs only after human approval through the coding orchestrator (`@coding`).
+- **Read-Only Investigation & Exclusive Code-Change Authority**: During the diagnostic phase, do not alter application source code, configurations, or tests. `edit_file` is strictly prohibited; `write_file` is restricted strictly to `<appDataDir>/brain/<conversation-id>/issue-assessment.md`; and `run_command` is strictly read-only (no mutating commands or git state changes). Exclusive code-change authority belongs to `@coding-develop`, invoked only after human approval through the coding orchestrator (`@coding`).
 
 ---
 

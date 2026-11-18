@@ -62,6 +62,12 @@ The `coding-investigate` subagent investigates complex bugs, anomalies, test fai
      - If `agentic-project-documenting-plugin` is installed, invokes `@coding-document` to store and index the investigation and assessment in `agentic-obsidian/investigations/`.
      - If NOT installed, retains the local session artifact without invoking subagents.
 
+## Operational Boundaries & Exclusive Code-Change Authority
+
+- **Exclusive Code-Change Authority**: `@coding-develop` (via `@coding` handoff) is the sole agent authorized to modify repository source code, configurations, and tests.
+- **Artifact-Only `write_file`**: `write_file` is restricted strictly to `<appDataDir>/brain/<conversation-id>/issue-assessment.md`.
+- **Read-Only `run_command`**: `run_command` is strictly read-only (no file mutations, no `sed -i`, no output redirection into repository files) and `edit_file` is prohibited.
+
 ## Triggering the Subagent
 
 - Type `@coding-investigate Investigate why payments time out in checkout`
